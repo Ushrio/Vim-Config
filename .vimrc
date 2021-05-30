@@ -4,17 +4,18 @@
 filetype off " REQUIRED Disable file type for vim plug.
 " Check for OS system in order to start vim-plug in
 if has('win32') || has('win64')
-    let g:plugDirectory = 'C:/Users/heimangreg/vimfiles/plugged'
+    let g:plugDirectory = '~/vimfiles/plugged'
 else
     let g:plugDirectory = '~/.vim/plugged'     
 endif
 call plug#begin(plugDirectory) " REQUIRED
-Plug 'tpope/vim-fugitive' " Git wrapper
-Plug 'airblade/vim-rooter' " Find project root automatically
-Plug 'tmsvg/pear-tree' " Add auto pair support for delimiters
-Plug 'ludovicchabant/vim-gutentags' " Make working with tags nice
 Plug 'gruvbox-community/gruvbox' " Gruvbox theme
+Plug 'tmsvg/pear-tree' " Add auto pair support for delimiters
+Plug 'lifepillar/vim-mucomplete' " Stop the whole C-x dance 
+Plug 'ludovicchabant/vim-gutentags' " Make working with tags nicer
+Plug 'tpope/vim-fugitive' " Git wrapper
 Plug 'tpope/vim-surround' " Easy surrounding of current selection
+Plug 'airblade/vim-rooter' " Find project root automatically
 call plug#end() " REQUIRED
 filetype plugin indent on " REQUIRED Re-enable all that filetype goodness
 """" END Vim Plug Configuration 
@@ -43,7 +44,7 @@ set laststatus=2 " Always display the status line
 set cursorline " Enable highlighting of the current line
 set spell spelllang=en_us " Enable Vim's built in spell check and set the proper spellcheck language
 set noswapfile undofile backup " No swaps. Persistent undo, create backups
-set undodir=C:/Users/heimangreg/.vim-undo// backupdir=C:/Users/heimangreg/.vim-backup// " Save backups and undo files to constant location
+set undodir=~/.vim-undo// backupdir=~/.vim-backup// " Save backups and undo files to constant location
 set colorcolumn=80 " Create line at 80 character mark
 set background=dark " Set the background to be dark. Enables dark mode on themes that support both dark and light
 nnoremap <Space> <Nop> 
@@ -96,7 +97,7 @@ if has("autocmd")
     if (v:version >= 80 && has("job") && has("timers")) || has('nvim')
         augroup CheckVimrc
             autocmd!
-            "autocmd VimEnter * call functions#GitFetchVimrc()
+            autocmd VimEnter * call functions#GitFetchVimrc()
         augroup END
     endif
     " Set the working directory to the git directory if there is one present
@@ -124,7 +125,7 @@ if has("autocmd")
     augroup END
     augroup GitBranch
         autocmd!
-        autocmd BufNewFile,BufReadPost,BufEnter * call functions#GetGitBranch() " Retrieve git branch for statusline
+        " autocmd BufNewFile,BufReadPost,BufEnter * call functions#GetGitBranch() " Retrieve git branch for statusline
     augroup END
 endif
 "}}}
@@ -210,7 +211,7 @@ let g:currentmode={'n'  : 'NORMAL', 'v'  : 'VISUAL', 'V'  : 'V·Line',
                     \ 't': 'Terminal'}
 set statusline= " Clear the status line
 set statusline+=\ %{toupper(g:currentmode[mode()])}\ \\| " Mode
-set statusline+=%{functions#GitBranchStatusLine()} " Git branch
+set statusline+=\ %{fugitive#head()}\ \\| " Git branch
 set statusline+=\ %t\ \\| " File name
 set statusline+=\ %(\%m%r%h%w%) " Modified, Read-only, help display
 set statusline+=%= " Right align
@@ -219,14 +220,20 @@ set statusline+=\ \\|\ %{&enc} " Encoding
 set statusline+=\ \\|\ %l/%L " Current line/Total lines
 set statusline+=\  " Extra space at the end
 
+" Mucomplete configuration
+let g:mucomplete#always_use_completeopt = 1 " Respect the completeopt
+let g:mucomplete#chains = {
+	    \ 'default' : ['path', 'omni', 'tags', 'incl', 'dict', 'uspl'],
+	    \ 'vim'     : ['path', 'cmd', 'keyp']
+	    \ }
+inoremap <silent> <plug>(MUcompleteFwdKey) <right>
+imap <right> <plug>(MUcompleteCycFwd)
+inoremap <silent> <plug>(MUcompleteBwdKey) <left>
+imap <left> <plug>(MUcompleteCycBwd)
 
 " Stop pear tree from hiding closing bracket till after leaving insert mode (breaks . command)
 let g:pear_tree_repeatable_expand = 0
 
-" Gutentags configuration
-let g:gutentags_ctags_executable = "C:/Users/heimangreg/Universal-Ctags/ctags.exe"
-
 " Rooter configuration
 let g:rooter_silent_chdir = 1
-
 "}}}
