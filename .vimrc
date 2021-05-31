@@ -9,7 +9,7 @@ else
     let g:plugDirectory = '~/.vim/plugged'     
 endif
 call plug#begin(plugDirectory) " REQUIRED
-Plug 'gruvbox-community/gruvbox' " Gruvbox theme
+Plug 'andreypopp/vim-colors-plain' " Near monochrome theme
 Plug 'tmsvg/pear-tree' " Add auto pair support for delimiters
 Plug 'lifepillar/vim-mucomplete' " Stop the whole C-x dance 
 Plug 'ludovicchabant/vim-gutentags' " Make working with tags nicer
@@ -53,14 +53,12 @@ let g:tex_flavor='latex' " Set the global tex flavor
 " Set custom highlights. Stops plugins from messing with colors
 augroup Highlight
     autocmd!
-    autocmd ColorScheme * highlight! link SignColumn LineNr
-    autocmd ColorScheme * highlight! link ALEErrorSign GruvboxRed
-    autocmd ColorScheme * highlight! link ALEWarningSign GruvboxYellow
+    autocmd ColorScheme * highlight! Normal guibg=#222222 
     autocmd ColorScheme * highlight! link StatusLine LineNr
     autocmd ColorScheme * highlight StatusLineNC cterm=reverse gui=reverse
     autocmd ColorScheme * highlight! link TabLine LineNr
 augroup END
-colorscheme gruvbox " Set color theme
+colorscheme plain " Set color theme
 
 " Set Font and size
 if has('win32') || has('win64')
@@ -102,17 +100,10 @@ if has("autocmd")
     endif
     " Set the working directory to the git directory if there is one present
     " otherwise set the working directory to the directory of the current file
-    augroup SetWorkingDirectory
-        autocmd!
-        "autocmd BufEnter * call functions#SetWorkingDirectory()
-    augroup END
     augroup Autosave
         autocmd!
         " Call autosave
         autocmd CursorHold,CursorHoldI,CursorMoved,CursorMovedI,InsertLeave,InsertEnter,BufLeave,VimLeave * call functions#Autosave()
-        if (v:version >= 80 && has("job")) || has('nvim')
-            "autocmd BufWritePost * if glob("./tags") != "" | call functions#UpdateTagsFile() | endif " Update tags file if one is present
-        endif 
     augroup END
     augroup SaveSessionIfExistsUponExit
         autocmd!
@@ -122,10 +113,6 @@ if has("autocmd")
         autocmd!
         " Automatically open quickfix window and refocus last window if errors are present after a :make command
         autocmd QuickFixCmdPost *make* cwindow
-    augroup END
-    augroup GitBranch
-        autocmd!
-        " autocmd BufNewFile,BufReadPost,BufEnter * call functions#GetGitBranch() " Retrieve git branch for statusline
     augroup END
 endif
 "}}}
