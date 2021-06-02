@@ -9,10 +9,11 @@ else
     let g:plugDirectory = '~/.vim/plugged'     
 endif
 call plug#begin(plugDirectory) " REQUIRED
-Plug 'andreypopp/vim-colors-plain' " Near monochrome theme
+Plug 'gruvbox-community/gruvbox' " Gruvbox theme 
 Plug 'tmsvg/pear-tree' " Add auto pair support for delimiters
 Plug 'lifepillar/vim-mucomplete' " Stop the whole C-x dance 
 Plug 'ludovicchabant/vim-gutentags' " Make working with tags nicer
+Plug 'tpope/vim-dispatch' " Asynchronous :make
 Plug 'tpope/vim-fugitive' " Git wrapper
 Plug 'tpope/vim-surround' " Easy surrounding of current selection
 Plug 'airblade/vim-rooter' " Find project root automatically
@@ -50,15 +51,13 @@ set background=dark " Set the background to be dark. Enables dark mode on themes
 nnoremap <Space> <Nop> 
 let mapleader="\<Space>" " Map leader to space
 let g:tex_flavor='latex' " Set the global tex flavor
-" Set custom highlights. Stops plugins from messing with colors
-augroup Highlight
+augroup Highlight " Set custom highlights. Stops plugins from messing with custom colors
     autocmd!
-    autocmd ColorScheme * highlight! Normal guibg=#222222 
     autocmd ColorScheme * highlight! link StatusLine LineNr
     autocmd ColorScheme * highlight StatusLineNC cterm=reverse gui=reverse
     autocmd ColorScheme * highlight! link TabLine LineNr
 augroup END
-colorscheme plain " Set color theme
+colorscheme gruvbox " Set color theme
 
 " Set Font and size
 if has('win32') || has('win64')
@@ -86,6 +85,10 @@ endif
 if executable('rg') " Use ripgrep if available
     set grepprg=rg\ --vimgrep\ $*
     set grepformat^=%f:%l:%c:%m 
+endif
+
+if has('clipboard') " Use system clipboard
+    set clipboard=unnamedplus
 endif
 "}}}
 
@@ -174,8 +177,6 @@ nnoremap <silent> ]Q :clast<CR>
 " Set Escape to leave terminal mode
 tnoremap <ESC> <C-\><C-n>
 
-" Command to make tags file inside Vim
-command! -nargs=0 -bar Mkctags silent exe '!ctags -R' | silent exe 'redraw!'
 " Auto split the terminal and open it in current directory
 command! -nargs=0 -bar Term let $VIM_DIR=expand('%:p:h') | silent exe 'sp' | silent exe 'term' | silent exe 'cd $VIM_DIR'
 
