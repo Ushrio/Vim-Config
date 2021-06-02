@@ -203,7 +203,8 @@ set statusline+=\ %{fugitive#head()}\ \\| " Git branch
 set statusline+=\ %t\ \\| " File name
 set statusline+=\ %(\%m%r%h%w%) " Modified, Read-only, help display
 set statusline+=%= " Right align
-set statusline+=%y " File format
+set statusline+=%Y " File type
+set statusline+=\ \\|\ %{&ff} " File format
 set statusline+=\ \\|\ %{&enc} " Encoding
 set statusline+=\ \\|\ %l/%L " Current line/Total lines
 set statusline+=\  " Extra space at the end
